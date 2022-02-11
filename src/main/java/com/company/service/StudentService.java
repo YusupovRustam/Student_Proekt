@@ -2,6 +2,7 @@ package com.company.service;
 
 import com.company.entity.Student;
 import com.company.repository.StudentRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +20,9 @@ public class StudentService {
     @Autowired
     FileStorageService fileStorageService;
 
-    @Autowired
-    ExcelService excelService;
+
+
+
 
     public Student save(Student student) {
         return studentRepository.save(student);
@@ -77,13 +79,12 @@ public class StudentService {
         return true;
     }
 
+
     public boolean checkName(Student student) {
         return student.getName().length() > 2;
     }
 
-    public ByteArrayInputStream getExcel(){
-       return excelService.getExcel(getAll());
-    }
+
 
     public List<Student> getAllnull(){
         return studentRepository.getAllBy();

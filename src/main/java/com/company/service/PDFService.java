@@ -151,7 +151,6 @@ public class PDFService {
         table.addCell("1");
         table.addCell("2018-2021");
         table.addCell("Temir yo'l");
-
         table.addCell("2");
         table.addCell("2021-2022");
         table.addCell("PDP");

@@ -5,7 +5,9 @@ import com.company.entity.StudentVisit;
 import com.company.service.StudentVisitService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +19,7 @@ public class StudentVisitResourse {
 
     @Autowired
     StudentVisitService studentVisitService;
-   @ApiOperation(value = "Kekgan vaqti",response = Student.class,tags = "postVisit")
+   @Operation(summary = "Kekgan vaqti")
     @PostMapping("/coming")
     public ResponseEntity comingDatesave(@RequestBody StudentVisit studentVisit){
         return ResponseEntity.ok(studentVisitService.comingDateSave(studentVisit).toString());
@@ -32,6 +34,7 @@ public class StudentVisitResourse {
     public ResponseEntity getAll(){
         return ResponseEntity.ok(studentVisitService.findAllString());
     }
+
 
 
 }

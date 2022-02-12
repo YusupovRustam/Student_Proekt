@@ -4,6 +4,7 @@ import com.company.entity.StudentVisit;
 import com.company.enums.VisitStatus;
 import com.company.repository.StudentVisitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -36,5 +37,21 @@ public class StudentVisitService {
     public List<String> findAllString() {
         List<StudentVisit> all = findAll();
         return all.stream().map((StudentVisit::toString)).collect(Collectors.toList());
+    }
+
+    public List<StudentVisit> findAllByVisitStatus(VisitStatus status) {
+
+        return studentVisitRepository.findAllByVisitStatus(status);
+    }
+
+    @Scheduled(cron = "0 0 18 * * *")
+    public void updateAllLeavingStudents() {
+        List<StudentVisit> allByVisitStatus = findAllByVisitStatus(VisitStatus.COMING);
+        allByVisitStatus.forEach((studentVisit -> {
+            studentVisit.setVisitStatus(VisitStatus.LEAVING);
+        }));
+        studentVisitRepository.saveAll(allByVisitStatus);
+
+
     }
 }

@@ -1,6 +1,8 @@
 package com.company.service;
 
 import com.company.entity.Student;
+import org.apache.commons.compress.utils.IOUtils;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -15,6 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ExcelService {
@@ -68,11 +71,10 @@ public class ExcelService {
                 cell6.setCellValue(student.getAddress());
                 cell6.setCellStyle(style);
             }
-            FileOutputStream fileOutputStream = new FileOutputStream("excel/student.xlsx");
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            outputStream.writeTo(fileOutputStream);
             workbook.write(outputStream);
-            byteArrayInputStream = new ByteArrayInputStream(outputStream.toByteArray());
+            byteArrayInputStream=new ByteArrayInputStream(outputStream.toByteArray());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,10 +87,24 @@ public class ExcelService {
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
         return cellStyle;
     }
+    private Workbook getWorkbook(String excelFilePath,InputStream inputStream)
+            throws IOException {
+        Workbook workbook = null;
+
+        if (excelFilePath.endsWith("xlsx")) {
+            workbook = new XSSFWorkbook(inputStream);
+        } else if (excelFilePath.endsWith("xls")) {
+            workbook = new HSSFWorkbook(inputStream);
+        } else {
+            throw new IllegalArgumentException("The specified file is not Excel file");
+        }
+
+        return workbook;
+    }
 
     public void writeFromExcelToDB(MultipartFile multipartFile) throws IOException, InvalidFormatException {
         InputStream inputStream = multipartFile.getInputStream();
-        Workbook workbook=new XSSFWorkbook(inputStream);
+        Workbook workbook=getWorkbook(Objects.requireNonNull(multipartFile.getOriginalFilename()),inputStream);
         Sheet sheet = workbook.getSheet("Лист1");
         Iterator<Row> iterator = sheet.iterator();
         int count=1;
@@ -100,16 +116,13 @@ public class ExcelService {
                 count++;
             }
             Row row =iterator.next();
-//            Cell cell1 = row.getCell(1);
-//            String id = cell1.getStringCellValue();
-//            long longId = Long.parseLong(id);
+//
 
             Cell cell2 = row.getCell(2);
             String name = cell2.getStringCellValue();
             if (name.equals("")){
                 break;
             }
-
             Cell cell3 = row.getCell(3);
             String surname = cell3.getStringCellValue();
 

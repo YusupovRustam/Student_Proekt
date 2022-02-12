@@ -17,48 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
+
 
 @Service
 public class PDFService {
     @Autowired
     StudentService service;
-//
-//    public void Export(HttpServletResponse response,Long id) {
-//        try {
-//            List<Student> all = service.getAll();
-//            Document document = new Document(PageSize.A4);
-//            PdfWriter.getInstance(document, response.getOutputStream());
-//            document.open();
-//
-//            Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
-//            fontTitle.setSize(18);
-//            Paragraph paragraph = new Paragraph("Student", fontTitle);
-//            paragraph.setAlignment(Paragraph.ALIGN_CENTER);
-//            document.add(paragraph);
-//
-//            Font font2 = FontFactory.getFont(FontFactory.HELVETICA);
-//            fontTitle.setSize(14);
-//            Paragraph paragraph2 = new Paragraph("Id" + "   " + "name" + "   " + "surname"
-//                    + "   " + "age" + "   " + "course" + "   " + "phone" + "   " + "address", font2);
-//            paragraph2.setAlignment(Paragraph.ALIGN_LEFT);
-//            document.add(paragraph2);
-//
-//            for (Student student : all) {
-//                Font font = FontFactory.getFont(FontFactory.HELVETICA);
-//                fontTitle.setSize(12);
-//                Paragraph paragraph1 = new Paragraph(student.getId() + "   " +
-//                        student.getName() + "   " + student.getSurname() + "   " +
-//                        student.getAge() + "   " + student.getCourse() + "   " + student.getPhone() + "   " +
-//                        student.getAddress(), font);
-//                paragraph1.setAlignment(Paragraph.ALIGN_LEFT);
-//                document.add(paragraph1);
-//            }
-//            document.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public void Export(HttpServletResponse response, Long id) throws IOException {
         Document document = new Document(PageSize.A4);
@@ -75,9 +39,9 @@ public class PDFService {
         LinkedList<String> list = new LinkedList<>();
         list.add("Name: " + student.getName());
         list.add("SurName: " + student.getSurname());
-        list.add(String.format("%-30s%s", "Age: " + student.getAge(), "Malumoti: Oliy"));
-        list.add(String.format("%-30s%s", "Address: " + student.getAddress(), "Til: English"));
-        list.add(String.format("%-30s%s", "Phone: " + student.getPhone(), "Hobbiy: Suzish"));
+        list.add(String.format("%-35s%s", "Age: " + student.getAge(), "\tMalumoti: Oliy"));
+        list.add(String.format("%-35s%s", "Address: " + student.getAddress(), "\tTil: English"));
+        list.add(String.format("%-35s%s", "Phone: " + student.getPhone(), "Hobbiy: Suzish"));
 
         Image instance = null;
         try {
@@ -99,12 +63,6 @@ public class PDFService {
             fontParagrafX.setSize(12);
             Paragraph paragraphX = new Paragraph(i, fontParagrafX);
             paragraphX.setAlignment(Paragraph.ALIGN_LEFT);
-
-//            Font fontParagrafY = FontFactory.getFont(FontFactory.HELVETICA);
-//            fontParagrafY.setSize(12);
-//            Paragraph paragraphY = new Paragraph(" ", fontParagrafY);
-//            paragraphY.setAlignment(Paragraph.ALIGN_LEFT);
-
             document.add(paragraphX);
             //  document.add(paragraphY);
         });

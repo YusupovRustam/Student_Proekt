@@ -36,7 +36,7 @@ public class StudentResourse {
     @Autowired
     ExcelService excelService;
 
-      @Operation(summary = "Yangi student yaratish")
+      @Operation(summary = "Create new student")
     @PostMapping
     public ResponseEntity save(@RequestBody Student student) {
         if (!studentService.checkName(student) || !studentService.checkPhone(student)){
@@ -45,7 +45,7 @@ public class StudentResourse {
         Student student1 = studentService.save(student);
         return ResponseEntity.ok(student1);
     }
-@Operation( summary= "StudentLar royhatini olish")
+@Operation( summary= "Get all student list")
 @ApiResponses(value = {
         @ApiResponse(code = 200,message ="Seccess|OK" ),
         @ApiResponse(code = 401,message ="Avtorizatsiyadan o'tmagan" ),
@@ -57,7 +57,7 @@ public class StudentResourse {
 
         return ResponseEntity.ok(studentService.getAll());
     }
-@Operation(summary = "Id boyicha studentni olish")
+@Operation(summary = "Get one student by id")
     @GetMapping("/{id}")
     public ResponseEntity getOne(@PathVariable Long id) {
         if (!studentService.isExists(id)){
@@ -66,7 +66,7 @@ public class StudentResourse {
         Student student = studentService.getOne(id);
         return ResponseEntity.ok(student);
     }
-    @Operation(summary = "Id bo'yicha studentni rasmini olish")
+    @Operation(summary = "Get image one student by id")
     @GetMapping("/photo/{id}")
     public HttpEntity<byte[]> getArticleImage(@PathVariable Long id) {
         byte[] image = studentService.getOne(id).getPhoto();
@@ -75,7 +75,7 @@ public class StudentResourse {
         headers.setContentLength(image.length);
         return new HttpEntity<>(image, headers);
     }
-    @Operation(summary = "Id boyicha studentni o'zgartirish")
+    @Operation(summary = "update student by id")
     @PutMapping("update/{id}")
     public ResponseEntity update(@PathVariable Long id, @RequestBody Student student) {
         if (!studentService.isExists(id)){
@@ -83,7 +83,7 @@ public class StudentResourse {
         }
         return ResponseEntity.ok(studentService.updete(id, student));
     }
-    @Operation(summary = "Id boyicha studentni o'chirish")
+    @Operation(summary = "Delete student by id")
     @DeleteMapping("/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
         if (!studentService.isExists(id)){
@@ -92,7 +92,7 @@ public class StudentResourse {
         studentService.delete(id);
         return ResponseEntity.ok("Ochirildi");
     }
-    @Operation(summary = "Id boyicha studentga rasm saqlash")
+    @Operation(summary = "save image student by id")
     @PutMapping("/savephoto/{id}")
     public ResponseEntity savePhoto(@PathVariable Long id, @RequestParam("file") MultipartFile multipartFile) {
         if (!studentService.isExists(id)){
@@ -100,7 +100,7 @@ public class StudentResourse {
         }
         return ResponseEntity.ok(studentService.savePhoto(id, multipartFile));
     }
-    @Operation(summary = "Studentlar ro'yhatini excel file da download qilish ")
+    @Operation(summary = "Download  excel file  list of students ")
     @GetMapping("/download/student.xlsx")
     public void downloadExc(HttpServletResponse response) throws IOException {
         response.setContentType("application/octet-stream");
@@ -109,7 +109,7 @@ public class StudentResourse {
         ByteArrayInputStream stream =excelService.getExcel(studentService.getAll());
         IOUtils.copy(stream, response.getOutputStream());
     }
-    @Operation(summary = "Student resumesi Id bo'yicha pdf formatda ")
+    @Operation(summary = "Download  pdf file   student by id")
     @GetMapping("/download/pdf/{id}")
     public void downloadPdf(HttpServletResponse response,@PathVariable Long id) throws IOException {
         response.setContentType("application/pdf");
@@ -122,7 +122,7 @@ public class StudentResourse {
         return ResponseEntity.ok(studentService.getAllnull());
     }
 
-    @Operation(summary = "Excel file dan Db ga student malumotlarini yozish")
+    @Operation(summary = "Writing from excel to DB ")
     @PostMapping("/excel/writeDB")
     public ResponseEntity writeFromExcelToDB(@RequestParam("file") MultipartFile multipartFile){
         try {

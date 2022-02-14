@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface StudentVisitRepository extends JpaRepository<StudentVisit,Long> {
+public interface StudentVisitRepository extends JpaRepository<StudentVisit, Long> {
 
 
     List<StudentVisit> findAllByVisitStatus(VisitStatus visitStatus);

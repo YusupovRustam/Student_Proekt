@@ -7,8 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,9 +17,6 @@ public class StudentService {
 
     @Autowired
     FileStorageService fileStorageService;
-
-
-
 
 
     public Student save(Student student) {
@@ -60,35 +55,12 @@ public class StudentService {
         return student;
     }
 
-    public boolean isExists(Long id) {
-        return studentRepository.countById(id) == 1;
+    public int countByPhone(String phone) {
+        return studentRepository.countByPhone(phone);
     }
 
-    public boolean checkPhone(Student student) {
-        String phone = student.getPhone();
-        int i = studentRepository.countByPhone(phone);
-        if (i != 0 || phone.length() != 13 || !phone.startsWith("+998")) {
-            return false;
-        }
-        char[] chars = phone.toCharArray();
-        for (int j = 1; j < chars.length; j++) {
-            if (!Character.isDigit(chars[j])) {
-                return false;
-            }
-        }
-        return true;
+    public int countById(Long id) {
+        return studentRepository.countById(id);
     }
-
-
-    public boolean checkName(Student student) {
-        return student.getName().length() > 2;
-    }
-
-
-
-    public List<Student> getAllnull(){
-        return studentRepository.getAllBy();
-    }
-
 
 }

@@ -1,8 +1,11 @@
 package com.company.service;
 
+import com.company.config.MessagingCopnfig;
 import com.company.entity.StudentVisit;
 import com.company.enums.VisitStatus;
 import com.company.repository.StudentVisitRepository;
+import com.google.gson.Gson;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -16,17 +19,29 @@ public class StudentVisitService {
     @Autowired
     StudentVisitRepository studentVisitRepository;
 
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     public StudentVisit comingDateSave(StudentVisit studentVisit) {
         studentVisit.setTime(LocalDateTime.now());
         studentVisit.setVisitStatus(VisitStatus.COMING);
-        studentVisitRepository.save(studentVisit);
+        // StudentVisit savedVisit = studentVisitRepository.save(studentVisit);
+        Gson gson = new Gson();
+        String s = gson.toJson(studentVisit, StudentVisit.class);
+        rabbitTemplate.convertAndSend(MessagingCopnfig.EXCHANGEUSER1, MessagingCopnfig.EXCHANGEUSER1, s);
+
         return studentVisit;
     }
 
     public StudentVisit leavingDateSave(StudentVisit studentVisit) {
         studentVisit.setTime(LocalDateTime.now());
         studentVisit.setVisitStatus(VisitStatus.LEAVING);
-        studentVisitRepository.save(studentVisit);
+        //  StudentVisit save = studentVisitRepository.save(studentVisit);
+        Gson gson = new Gson();
+        String s = gson.toJson(studentVisit);
+        rabbitTemplate.convertAndSend(MessagingCopnfig.EXCHANGEUSER1, MessagingCopnfig.EXCHANGEUSER1, s);
+
+
         return studentVisit;
     }
 
